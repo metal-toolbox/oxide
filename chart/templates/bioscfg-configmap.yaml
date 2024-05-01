@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bioscfg-config
+  namespace: default
+data:
+  config.yaml: |
+    log_level: debug
+    concurrency: 5
+    nats:
+      app_name: bioscfg
+      consumer:
+        pull: true
+        ack_wait: 5m
+        max_ack_pending: 10
+        queue_group: bioscfg
+      stream:
+        name: controllers
+        subjects:
+          - com.hollow.sh.controllers.commands.>
+          - com.hollow.sh.controllers.responses.>
+        acknowledgements: true
+        duplicate_window: 5m
+        retention: workQueue
