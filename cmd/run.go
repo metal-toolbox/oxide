@@ -78,7 +78,7 @@ func runWorker(ctx context.Context, args *model.Args) error {
 		return err
 	}
 
-	slog.With(version.Current()).Info("bioscfg worker running")
+	slog.With(version.Current().AsLogFields()...).Info("bioscfg worker running")
 
 	err = nc.ListenEvents(ctx, func() controller.ConditionHandler {
 		return handlers.NewHandlerFactory(repository)
