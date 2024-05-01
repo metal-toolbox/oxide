@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-service: bioscfg
+  name: bioscfg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-service: bioscfg
+  template:
+    metadata:
+      labels:
+        k8s-service: bioscfg
+    spec:
+      terminationGracePeriodSeconds: 1200
+      containers:
+        - name: bioscfg
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: [
+           "bioscfg",
+           "--config",
+           "/etc/bioscfg/config.yaml",
+           "--enable-pprof",
+           "--log-level",
+           "debug",
+           "--facility-code",
+           "{{ .Values.location }}"
+          ]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/bioscfg
+            - name: nats-creds-volume
+              mountPath: /etc/nats
+              readOnly: true
+          env:
+            - name: BIOSCFG_NATS_URL
+              value: "{{ .Values.env.NATS_URL }}"
+            - name: BIOSCFG_NATS_CONNECT_TIMEOUT
+              value: "{{ .Values.env.NATS_CONNECT_TIMEOUT }}"
+            - name: BIOSCFG_NATS_KV_REPLICAS
+              value: "{{ .Values.env.NATS_KV_REPLICAS }}"
+            - name: BIOSCFG_NATS_CREDS_FILE
+              value: /etc/nats/nats.creds
+            - name: BIOSCFG_FLEETDB_ENDPOINT
+              value: "{{ .Values.env.FLEETDB_ENDPOINT }}"
+            - name: BIOSCFG_FLEETDB_DISABLE_OAUTH
+              value: "{{ .Values.env.FLEETDB_DISABLE_OAUTH }}"
+            - name: BIOSCFG_FLEETDB_FACILITY_CODE
+              value: "{{ .Values.location  }}"
+            - name: BIOSCFG_FLEETDB_OIDC_AUDIENCE_ENDPOINT
+              value: "{{ .Values.env.FLEETDB_OIDC_AUDIENCE_ENDPOINT }}"
+            - name: BIOSCFG_FLEETDB_OIDC_ISSUER_ENDPOINT
+              value: "{{ .Values.env.FLEETDB_OIDC_ISSUER_ENDPOINT }}"
+            - name: BIOSCFG_FLEETDB_OIDC_CLIENT_SCOPES
+              value: "{{ .Values.env.FLEETDB_OIDC_CLIENT_SCOPES }}"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.env.OTEL_EXPORTER_OTLP_ENDPOINT }}"
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "{{ .Values.env.OTEL_EXPORTER_OTLP_INSECURE }}"
+            - name: BIOSCFG_FLEETDB_OIDC_CLIENT_ID
+              value: "{{ .Values.env.FLEETDB_OIDC_CLIENT_ID }}"
+          securityContext:
+            capabilities:
+              drop:
+                - NET_RAW
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200M
+            requests:
+              cpu: 200m
+              memory: 200M
+          ports:
+            - name: metrics-port
+              containerPort: 9090
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics-port
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics-port
+            initialDelaySeconds: 5
+      volumes:
+        - name: config-volume
+          configMap:
+            name: bioscfg-config
+        - name: nats-creds-volume
+          secret:
+            secretName: bioscfg-secrets
+            items:
+              - key: bioscfg-nats-creds
+                path: nats.creds
+      restartPolicy: Always
