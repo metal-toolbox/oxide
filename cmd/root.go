@@ -18,26 +18,16 @@ package cmd
 
 import (
 	"fmt"
-	"log/slog"
 	"os"
 
-	"github.com/metal-toolbox/bioscfg/internal/model"
+	"github.com/metal-toolbox/bioscfg/internal/controllers"
 	"github.com/spf13/cobra"
-)
-
-var (
-	args = &model.Args{}
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "bioscfg",
-	Short: "bioscfg remotely manages BIOS settings",
-	Run: func(cmd *cobra.Command, _ []string) {
-		if err := runWorker(cmd.Context(), args); err != nil {
-			os.Exit(1)
-		}
-	},
+	Use:   "controller",
+	Short: "Fleet Services Controllers",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -51,19 +41,11 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().
-		StringVar(&args.ConfigFile, "config", "", "configuration file (default is $HOME/.bioscfg.yml)")
+		StringVar(&controllers.ConfigFile, "config", "", "configuration file (default is $HOME/.bioscfg.yml)")
 
 	rootCmd.PersistentFlags().
-		StringVar(&args.LogLevel, "log-level", "info", "set logging level - debug, trace")
+		StringVar(&controllers.LogLevel, "log-level", "info", "set logging level - debug, trace")
 
 	rootCmd.PersistentFlags().
-		BoolVarP(&args.EnableProfiling, "enable-pprof", "", false, "Enable profiling endpoint at: http://localhost:9091")
-
-	rootCmd.PersistentFlags().
-		StringVarP(&args.FacilityCode, "facility-code", "f", "", "The facility code this bioscfg instance is associated with")
-
-	if err := rootCmd.MarkPersistentFlagRequired("facility-code"); err != nil {
-		slog.Error("failed to mark required flag", "error", err)
-		os.Exit(1)
-	}
+		BoolVarP(&controllers.EnableProfiling, "enable-pprof", "", false, "Enable profiling endpoint at: http://localhost:9091")
 }

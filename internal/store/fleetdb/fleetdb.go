@@ -3,43 +3,40 @@ package fleetdb
 import (
 	"context"
 	"encoding/json"
-	"log/slog"
 	"net"
 
 	"github.com/google/uuid"
-	"github.com/metal-toolbox/bioscfg/internal/configuration"
 	"github.com/metal-toolbox/bioscfg/internal/model"
-	fleetdbapi "github.com/metal-toolbox/fleetdb/pkg/api/v1"
 	"github.com/metal-toolbox/rivets/fleetdb"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+
+	fleetdbapi "github.com/metal-toolbox/fleetdb/pkg/api/v1"
 )
 
 const (
 	pkgName = "internal/store"
 )
 
-var (
-	ErrInventoryQuery = errors.New("fleetdb query returned error")
-	ErrFleetDBObject  = errors.New("fleetdb object error")
-)
-
 // Store is an asset inventory store
 type Store struct {
 	api    *fleetdbapi.Client
-	config *configuration.FleetDBOptions
+	logger *logrus.Logger
+	config *Config
 }
 
 // New returns a fleetdb store queryor to lookup and publish assets to, from the store.
-func New(ctx context.Context, cfg *configuration.FleetDBOptions) (*Store, error) {
-	apiclient, err := NewFleetDBClient(ctx, cfg)
+func New(ctx context.Context, cfg *Config, logger *logrus.Logger) (*Store, error) {
+	apiclient, err := NewFleetDBClient(ctx, cfg, logger)
 	if err != nil {
 		return nil, err
 	}
 
 	s := &Store{
 		api:    apiclient,
+		logger: logger,
 		config: cfg,
 	}
 
@@ -79,8 +76,7 @@ func toAsset(server *fleetdbapi.Server, credential *fleetdbapi.ServerCredential)
 
 	serverAttributes, err := serverAttributes(server.Attributes)
 	if err != nil {
-		slog.Error("error getting server attributes", "error", err)
-		return nil, errors.Wrap(ErrFleetDBObject, err.Error())
+		return nil, errors.Wrap(err, "error getting server attributes")
 	}
 
 	asset := &model.Asset{

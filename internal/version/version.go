@@ -1,6 +1,7 @@
 package version
 
 import (
+	"encoding/json"
 	"runtime"
 	rdebug "runtime/debug"
 	"strings"
@@ -47,6 +48,22 @@ func Current() *Version {
 		GoVersion:         GoVersion,
 		FleetdbAPIVersion: FleetdbAPIVersion,
 	}
+}
+
+func (v *Version) AsMap() (map[string]any, error) {
+	var asMap map[string]interface{}
+
+	bytes, err := json.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(bytes, &asMap)
+	if err != nil {
+		return nil, err
+	}
+
+	return asMap, nil
 }
 
 func ExportBuildInfoMetric() {

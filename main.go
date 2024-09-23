@@ -17,10 +17,8 @@ package main
 
 import (
 	"github.com/metal-toolbox/bioscfg/cmd"
-	"github.com/metal-toolbox/bioscfg/internal/log"
 )
 
 func main() {
-	log.InitLogger()
 	cmd.Execute()
 }
