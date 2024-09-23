@@ -2,6 +2,7 @@ package fleetdb
 
 import (
 	"net"
+
 	"testing"
 
 	"github.com/google/uuid"

@@ -1,14 +1,29 @@
-location: "sandbox"
+enable: true
 image:
-  repository: "localhost:5001/bioscfg"
-  tag: latest
   pullPolicy: Always
+  repository:
+    tag: latest
+    url: localhost:5001
 env:
-  FLEETDB_ENDPOINT: http://fleetdb:8000
-  FLEETDB_DISABLE_OAUTH: true
-  NATS_URL: "nats://nats:4222"
-  NATS_CONNECT_TIMEOUT: 60s
-  NATS_KV_REPLICAS: 1
-  # telemetry configuration
-  OTEL_EXPORTER_OTLP_ENDPOINT: jaeger:4317
-  OTEL_EXPORTER_OTLP_INSECURE: true
+  test: myTest
+  test1: myFirstTest
+  facility: sandbox
+  log_level: debug
+  concurrency: 5
+  dryrun: true
+  endpoints:
+    fleetdb:
+      authenticate: false
+      oidc_audience_url:
+      oidc_client_id:
+      oidc_issuer_url:
+      oidc_client_scopes:
+      url: http://fleetdb:8000
+    nats:
+      connect_timeout: 60s
+      kv_replication: 1
+      creds_file: /etc/nats/nats.creds
+      url: nats://nats:4222
+    otel:
+      authenticate: false
+      url: jaeger:4317
