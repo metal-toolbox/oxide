@@ -1,6 +1,0 @@
-apiVersion: v2
-name: bioscfg
-description: A helm chart for deploying the bioscfg controller.
-type: application
-version: 0.0.1
-appVersion: "0.0.1"
