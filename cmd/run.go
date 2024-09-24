@@ -9,40 +9,41 @@ import (
 	"syscall"
 
 	"github.com/equinix-labs/otel-init-go/otelinit"
-	"github.com/metal-toolbox/bioscfg/internal/configuration"
+	"github.com/metal-toolbox/bioscfg/internal/config"
 	"github.com/metal-toolbox/bioscfg/internal/handlers"
 	"github.com/metal-toolbox/bioscfg/internal/log"
 	"github.com/metal-toolbox/bioscfg/internal/metrics"
 	"github.com/metal-toolbox/bioscfg/internal/model"
 	"github.com/metal-toolbox/bioscfg/internal/profiling"
-	"github.com/metal-toolbox/bioscfg/internal/store"
+	"github.com/metal-toolbox/bioscfg/internal/store/fleetdb"
 	"github.com/metal-toolbox/bioscfg/internal/version"
 	"github.com/metal-toolbox/ctrl"
 )
 
 func runWorker(ctx context.Context, args *model.Args) error {
-	config, err := configuration.Load(args)
+	cfg, err := config.Load(args.ConfigFile, args.LogLevel)
 	if err != nil {
 		slog.Error("Failed to load configuration", "error", err)
 		return err
 	}
 
-	slog.Info("Configuration loaded", config.AsLogFields()...)
+	slog.Info("Configuration loaded", cfg.AsLogFields()...)
 
-	log.SetLevel(config.LogLevel)
+	log.SetLevel(cfg.LogLevel)
 
 	// serve metrics endpoint
 	metrics.ListenAndServe()
 	version.ExportBuildInfoMetric()
 
-	if config.EnableProfiling {
+	if args.EnableProfiling {
 		profiling.Enable()
 	}
 
 	ctx, otelShutdown := otelinit.InitOpenTelemetry(ctx, model.AppName)
 	defer otelShutdown(ctx)
 
-	repository, err := store.NewRepository(ctx, config)
+	log.NewLogrusLogger(cfg.LogLevel)
+	repository, err := fleetdb.New(ctx, &cfg.Endpoints.FleetDB, log.NewLogrusLogger(cfg.LogLevel))
 	if err != nil {
 		slog.Error("Failed to create repository", "error", err)
 		return err
@@ -62,15 +63,15 @@ func runWorker(ctx context.Context, args *model.Args) error {
 
 	nc := ctrl.NewNatsController(
 		model.AppName,
-		config.FacilityCode,
+		cfg.FacilityCode,
 		model.AppSubject,
-		config.NatsConfig.NatsURL,
-		config.NatsConfig.CredsFile,
+		cfg.Endpoints.Nats.URL,
+		cfg.Endpoints.Nats.CredsFile,
 		model.AppSubject,
-		ctrl.WithConcurrency(config.Concurrency),
-		ctrl.WithKVReplicas(config.NatsConfig.KVReplicas),
-		ctrl.WithConnectionTimeout(config.NatsConfig.ConnectTimeout),
-		ctrl.WithLogger(log.NewLogrusLogger(config.LogLevel)),
+		ctrl.WithConcurrency(cfg.Concurrency),
+		ctrl.WithKVReplicas(cfg.Endpoints.Nats.KVReplicationFactor),
+		ctrl.WithConnectionTimeout(cfg.Endpoints.Nats.ConnectTimeout),
+		ctrl.WithLogger(log.NewLogrusLogger(cfg.LogLevel)),
 	)
 
 	if err = nc.Connect(ctx); err != nil {

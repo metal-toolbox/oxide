@@ -7,7 +7,7 @@ import (
 
 	"github.com/bmc-toolbox/bmclib/v2"
 	"github.com/metal-toolbox/bioscfg/internal/model"
-	"github.com/metal-toolbox/bioscfg/internal/store"
+	"github.com/metal-toolbox/bioscfg/internal/store/fleetdb"
 	"github.com/metal-toolbox/bioscfg/internal/tasks"
 	"github.com/metal-toolbox/ctrl"
 	rctypes "github.com/metal-toolbox/rivets/condition"
@@ -15,11 +15,11 @@ import (
 
 // HandlerFactory has the data and business logic for the application
 type HandlerFactory struct {
-	repository store.Repository
+	repository *fleetdb.Store
 }
 
 // NewHandlerFactory returns a new instance of the Handler
-func NewHandlerFactory(repository store.Repository) *HandlerFactory {
+func NewHandlerFactory(repository *fleetdb.Store) *HandlerFactory {
 	return &HandlerFactory{
 		repository: repository,
 	}

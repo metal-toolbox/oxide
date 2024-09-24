@@ -5,6 +5,7 @@ go 1.22.1
 require (
 	github.com/banzaicloud/logrus-runtime-formatter v0.0.0-20190729070250-5ae5475bae5e
 	github.com/bmc-toolbox/bmclib/v2 v2.2.4
+	github.com/bombsimon/logrusr/v2 v2.0.1
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/equinix-labs/otel-init-go v0.0.9
 	github.com/google/uuid v1.6.0
@@ -12,7 +13,7 @@ require (
 	github.com/jeremywohl/flatten v1.0.1
 	github.com/metal-toolbox/ctrl v0.2.9
 	github.com/metal-toolbox/fleetdb v1.19.5
-	github.com/metal-toolbox/rivets v1.3.8-0.20240923144748-4fa59d630b50
+	github.com/metal-toolbox/rivets v1.3.8
 	github.com/mitchellh/copystructure v1.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pkg/errors v0.9.1
@@ -24,6 +25,7 @@ require (
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0
 	go.opentelemetry.io/otel v1.28.0
 	go.opentelemetry.io/otel/trace v1.28.0
+	golang.org/x/net v0.28.0
 	golang.org/x/oauth2 v0.22.0
 )
 
@@ -133,7 +135,6 @@ require (
 	golang.org/x/arch v0.9.0 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
-	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240716161551-93cc26a95ae9 // indirect
