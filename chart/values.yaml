@@ -10,7 +10,7 @@ env:
   facility: sandbox
   log_level: debug
   concurrency: 5
-  dryrun: true
+  dryrun: false
   endpoints:
     fleetdb:
       authenticate: false

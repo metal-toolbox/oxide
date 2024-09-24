@@ -136,14 +136,3 @@ func (cfg *Configuration) envBindVars(v *viper.Viper) error {
 
 	return nil
 }
-
-func (cfg *Configuration) AsLogFields() []any {
-	return []any{
-		"logLevel", cfg.LogLevel,
-		"concurrency", cfg.Concurrency,
-		"facilityCode", cfg.FacilityCode,
-		"authenticate", cfg.Endpoints.FleetDB.Authenticate,
-		"fleetDBUrl", cfg.Endpoints.FleetDB.URL,
-		"natsURL", cfg.Endpoints.Nats.URL,
-	}
-}

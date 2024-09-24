@@ -6,7 +6,7 @@ GIT_SUMMARY := $(shell git describe --tags --dirty --always)
 VERSION     := $(shell git describe --tags 2> /dev/null)
 BUILD_DATE  := $(shell date +%s)
 GIT_COMMIT_FULL  := $(shell git rev-parse HEAD)
-GO_VERSION := $(shell expr `go version |cut -d ' ' -f3 |cut -d. -f2` \>= 23)
+GO_VERSION := $(shell expr `go version |cut -d ' ' -f3 |cut -d. -f2` \>= 22)
 DOCKER_IMAGE  := "ghcr.io/metal-toolbox/bioscfg"
 REPO := "https://github.com/metal-toolbox/bioscfg.git"
 
@@ -30,7 +30,7 @@ gen-mock:
 ## build-osx
 build-osx:
 ifeq ($(GO_VERSION), 0)
-	$(error build requies go version 1.23 or higher)
+	$(error build requies go version 1.22 or higher)
 endif
 	CGO_ENABLED=0 go build -o bioscfg \
 		-ldflags \
@@ -43,7 +43,7 @@ endif
 ## Build linux bin
 build-linux:
 ifeq ($(GO_VERSION), 0)
-	$(error build requies go version 1.23 or higher)
+	$(error build requies go version 1.22 or higher)
 endif
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bioscfg \
 		-ldflags \
