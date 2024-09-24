@@ -8,13 +8,17 @@ import (
 
 	"github.com/bmc-toolbox/bmclib/v2"
 	"github.com/metal-toolbox/bioscfg/internal/model"
+	"github.com/metal-toolbox/ctrl"
 	rctypes "github.com/metal-toolbox/rivets/condition"
-	"github.com/metal-toolbox/rivets/events/controller"
+	rtypes "github.com/metal-toolbox/rivets/types"
+	"github.com/mitchellh/copystructure"
 	"github.com/pkg/errors"
 )
 
 var (
-	currentPowerStateKey = "currentPowerState"
+	currentPowerStateKey      = "currentPowerState"
+	errInvalidConditionParams = errors.New("invalid condition parameters")
+	errTaskConv               = errors.New("error in generic Task conversion")
 )
 
 // Miscellaneous
@@ -98,25 +102,106 @@ func (j *biosResetTask) Asset() *model.Asset {
 	return j.asset
 }
 
+type RCTask rctypes.Task[*rctypes.BiosControlTaskParameters, json.RawMessage]
+
+func NewTask(task *rctypes.Task[any, any]) (*RCTask, error) {
+	paramsJSON, ok := task.Parameters.(json.RawMessage)
+	if !ok {
+		return nil, errInvalidConditionParams
+	}
+
+	params := rctypes.BiosControlTaskParameters{}
+	if err := json.Unmarshal(paramsJSON, &params); err != nil {
+		return nil, err
+	}
+
+	// deep copy fields referenced by pointer
+	asset, err := copystructure.Copy(task.Server)
+	if err != nil {
+		return nil, errors.Wrap(errTaskConv, err.Error()+": Task.Server")
+	}
+
+	fault, err := copystructure.Copy(task.Fault)
+	if err != nil {
+		return nil, errors.Wrap(errTaskConv, err.Error()+": Task.Fault")
+	}
+
+	return &RCTask{
+		StructVersion: task.StructVersion,
+		ID:            task.ID,
+		Kind:          task.Kind,
+		State:         task.State,
+		Status:        task.Status,
+		Parameters:    &params,
+		Fault:         fault.(*rctypes.Fault),
+		FacilityCode:  task.FacilityCode,
+		Server:        asset.(*rtypes.Server),
+		WorkerID:      task.WorkerID,
+		TraceID:       task.TraceID,
+		SpanID:        task.SpanID,
+		CreatedAt:     task.CreatedAt,
+		UpdatedAt:     task.UpdatedAt,
+		CompletedAt:   task.CompletedAt,
+	}, nil
+}
+
+func (task *RCTask) ToGeneric() (*rctypes.Task[any, any], error) {
+	paramsJSON, err := task.Parameters.Marshal()
+	if err != nil {
+		return nil, errors.Wrap(errTaskConv, err.Error()+": Task.Parameters")
+	}
+
+	// deep copy fields referenced by pointer
+	asset, err := copystructure.Copy(task.Server)
+	if err != nil {
+		return nil, errors.Wrap(errTaskConv, err.Error()+": Task.Server")
+	}
+
+	fault, err := copystructure.Copy(task.Fault)
+	if err != nil {
+		return nil, errors.Wrap(errTaskConv, err.Error()+": Task.Fault")
+	}
+
+	return &rctypes.Task[any, any]{
+		StructVersion: task.StructVersion,
+		ID:            task.ID,
+		Kind:          task.Kind,
+		State:         task.State,
+		Status:        task.Status,
+		Parameters:    paramsJSON,
+		Fault:         fault.(*rctypes.Fault),
+		FacilityCode:  task.FacilityCode,
+		Server:        asset.(*rtypes.Server),
+		WorkerID:      task.WorkerID,
+		TraceID:       task.TraceID,
+		SpanID:        task.SpanID,
+		CreatedAt:     task.CreatedAt,
+		UpdatedAt:     task.UpdatedAt,
+		CompletedAt:   task.CompletedAt,
+	}, nil
+}
+
 // TaskRunner Will run the task by executing the individual steps in the task,
 // and reports task status using the publisher.
 type TaskRunner struct {
-	publisher  controller.ConditionStatusPublisher
-	task       Task
+	publisher  ctrl.Publisher
+	task       *RCTask
+	oldTask    Task
 	taskStatus *TaskStatus
 }
 
 // NewTaskRunner creates a TaskRunner to run a specific Task
-func NewTaskRunner(publisher controller.ConditionStatusPublisher, task Task) *TaskRunner {
+func NewTaskRunner(publisher ctrl.Publisher, oldTask Task, task *RCTask) *TaskRunner {
 	return &TaskRunner{
 		publisher:  publisher,
 		task:       task,
-		taskStatus: NewTaskStatus(task.Name(), rctypes.Pending),
+		oldTask:    oldTask,
+		taskStatus: NewTaskStatus(oldTask.Name(), rctypes.Pending),
 	}
 }
 
 func (r *TaskRunner) Run(ctx context.Context, client *bmclib.Client) (err error) {
-	slog.With(r.task.Asset().AsLogFields()...).Info("Running task", "task", r.task.Name())
+	slog.With(r.oldTask.Asset().AsLogFields()...).Info("Running task", "task", r.oldTask.Name())
 
 	data := sharedData{}
 	r.initTaskLog()
@@ -135,7 +220,7 @@ func (r *TaskRunner) Run(ctx context.Context, client *bmclib.Client) (err error)
 	}
 	defer client.Close(ctx)
 
-	for stepID, step := range r.task.Steps() {
+	for stepID, step := range r.oldTask.Steps() {
 		r.publishStepUpdate(ctx, stepID, "Running step")
 
 		details, err := step.Run(ctx, client, data)
@@ -153,7 +238,7 @@ func (r *TaskRunner) Run(ctx context.Context, client *bmclib.Client) (err error)
 }
 
 func (r *TaskRunner) initTaskLog() {
-	steps := r.task.Steps()
+	steps := r.oldTask.Steps()
 	r.taskStatus.Steps = make([]*StepStatus, len(steps))
 
 	for i, step := range steps {
@@ -181,20 +266,20 @@ func (r *TaskRunner) publishStepSuccess(ctx context.Context, stepID int, details
 }
 
 func (r *TaskRunner) publishFailed(ctx context.Context, stepID int, details string, err error) {
-	slog.With(r.task.Asset().AsLogFields()...).Error("Task failed", "task", r.task.Name())
+	slog.With(r.oldTask.Asset().AsLogFields()...).Error("Task failed", "task", r.oldTask.Name())
 	r.publish(ctx, stepID, rctypes.Failed, rctypes.Failed, details, err)
 }
 
 func (r *TaskRunner) publishTaskSuccess(ctx context.Context) {
-	slog.With(r.task.Asset().AsLogFields()...).Info("Task completed successfully", "task", r.task.Name())
+	slog.With(r.oldTask.Asset().AsLogFields()...).Info("Task completed successfully", "task", r.oldTask.Name())
 	r.publishTaskUpdate(ctx, rctypes.Succeeded, "Task completed successfully", nil)
 }
 
 func (r *TaskRunner) publish(ctx context.Context, stepID int, stepState, taskState rctypes.State, details string, err error) {
-	step := r.task.Steps()[stepID]
+	step := r.oldTask.Steps()[stepID]
 	stepStatus := NewStepStatus(step.Name(), stepState, details, err)
 
-	slog.With(r.task.Asset().AsLogFields()...).With(stepStatus.AsLogFields()...).Info(details, "step", step.Name())
+	slog.With(r.oldTask.Asset().AsLogFields()...).With(stepStatus.AsLogFields()...).Info(details, "step", step.Name())
 
 	r.taskStatus.Steps[stepID] = stepStatus
 
@@ -207,20 +292,23 @@ func (r *TaskRunner) publish(ctx context.Context, stepID int, stepState, taskSta
 }
 
 func (r *TaskRunner) publishTaskUpdate(ctx context.Context, state rctypes.State, details string, err error) {
-	r.taskStatus.Status = string(state)
-	r.taskStatus.Details = details
+	r.task.State = state
+	r.task.Status.Append(details)
 
 	if err != nil {
 		r.taskStatus.Error = err.Error()
 	}
 
-	slog.With(r.task.Asset().AsLogFields()...).Info("Task update", "task", r.task.Name())
+	slog.With(r.oldTask.Asset().AsLogFields()...).Info("Task update", "task", r.oldTask.Name())
 
-	respBytes, err := json.Marshal(r.taskStatus)
+	genTask, err := r.task.ToGeneric()
 	if err != nil {
-		slog.Error("Failed to marshal condition update", "error", err)
+		r.taskStatus.Error = err.Error()
 		return
 	}
 
-	r.publisher.Publish(ctx, r.task.Asset().ID.String(), state, respBytes)
+	err = r.publisher.Publish(ctx, genTask, false)
+	if err != nil {
+		return
+	}
 }
