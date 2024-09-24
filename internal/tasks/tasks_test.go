@@ -2,7 +2,6 @@ package tasks
 
 import (
 	"context"
-	"encoding/json"
 	"testing"
 
 	"github.com/bmc-toolbox/bmclib/v2"
@@ -33,6 +32,10 @@ func newFakeTask() *fakeTask {
 	}
 }
 
+func newFakeRCTask() *RCTask {
+	return &RCTask{}
+}
+
 func (t *fakeTask) Name() string {
 	return "fake task"
 }
@@ -49,12 +52,14 @@ type fakePublisher struct {
 	t *testing.T
 }
 
-func (m *fakePublisher) Publish(_ context.Context, _ string, _ condition.State, _ json.RawMessage) {
+func (m *fakePublisher) Publish(_ context.Context, _ *condition.Task[any, any], _ bool) error {
+	return nil
 }
 
 func TestTaskRunnerHandlePanic(t *testing.T) {
 	task := newFakeTask()
-	runner := NewTaskRunner(&fakePublisher{t: t}, task)
+	rcTask := newFakeRCTask()
+	runner := NewTaskRunner(&fakePublisher{t: t}, task, rcTask)
 
 	err := runner.Run(context.Background(), nil)
 

@@ -14,7 +14,7 @@ REPO := "https://github.com/metal-toolbox/bioscfg.git"
 
 ## lint
 lint: gen-mock
-	golangci-lint run --config .golangci.yml
+	golangci-lint run --config .golangci.yml --fix
 
 ## Go test
 test: lint

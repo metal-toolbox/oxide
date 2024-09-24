@@ -17,7 +17,7 @@ import (
 	"github.com/metal-toolbox/bioscfg/internal/profiling"
 	"github.com/metal-toolbox/bioscfg/internal/store"
 	"github.com/metal-toolbox/bioscfg/internal/version"
-	"github.com/metal-toolbox/rivets/events/controller"
+	"github.com/metal-toolbox/ctrl"
 )
 
 func runWorker(ctx context.Context, args *model.Args) error {
@@ -60,17 +60,17 @@ func runWorker(ctx context.Context, args *model.Args) error {
 		cancel()
 	}()
 
-	nc := controller.NewNatsController(
+	nc := ctrl.NewNatsController(
 		model.AppName,
 		config.FacilityCode,
 		model.AppSubject,
 		config.NatsConfig.NatsURL,
 		config.NatsConfig.CredsFile,
 		model.AppSubject,
-		controller.WithConcurrency(config.Concurrency),
-		controller.WithKVReplicas(config.NatsConfig.KVReplicas),
-		controller.WithConnectionTimeout(config.NatsConfig.ConnectTimeout),
-		controller.WithLogger(log.NewLogrusLogger(config.LogLevel)),
+		ctrl.WithConcurrency(config.Concurrency),
+		ctrl.WithKVReplicas(config.NatsConfig.KVReplicas),
+		ctrl.WithConnectionTimeout(config.NatsConfig.ConnectTimeout),
+		ctrl.WithLogger(log.NewLogrusLogger(config.LogLevel)),
 	)
 
 	if err = nc.Connect(ctx); err != nil {
@@ -80,7 +80,7 @@ func runWorker(ctx context.Context, args *model.Args) error {
 
 	slog.With(version.Current().AsLogFields()...).Info("bioscfg worker running")
 
-	err = nc.ListenEvents(ctx, func() controller.ConditionHandler {
+	err = nc.ListenEvents(ctx, func() ctrl.TaskHandler {
 		return handlers.NewHandlerFactory(repository)
 	})
 	if err != nil {
