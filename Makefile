@@ -6,7 +6,7 @@ GIT_SUMMARY := $(shell git describe --tags --dirty --always)
 VERSION     := $(shell git describe --tags 2> /dev/null)
 BUILD_DATE  := $(shell date +%s)
 GIT_COMMIT_FULL  := $(shell git rev-parse HEAD)
-GO_VERSION := $(shell expr `go version |cut -d ' ' -f3 |cut -d. -f2` \>= 16)
+GO_VERSION := $(shell expr `go version |cut -d ' ' -f3 |cut -d. -f2` \>= 22)
 DOCKER_IMAGE  := "ghcr.io/metal-toolbox/bioscfg"
 REPO := "https://github.com/metal-toolbox/bioscfg.git"
 
@@ -30,38 +30,36 @@ gen-mock:
 ## build-osx
 build-osx:
 ifeq ($(GO_VERSION), 0)
-	$(error build requies go version 1.22.1 or higher)
+	$(error build requies go version 1.22 or higher)
 endif
-	  go build -o bioscfg \
-	   -ldflags \
+	CGO_ENABLED=0 go build -o bioscfg \
+		-ldflags \
 		"-X $(LDFLAG_LOCATION).GitCommit=$(GIT_COMMIT) \
-         -X $(LDFLAG_LOCATION).GitBranch=$(GIT_BRANCH) \
-         -X $(LDFLAG_LOCATION).GitSummary=$(GIT_SUMMARY) \
-         -X $(LDFLAG_LOCATION).AppVersion=$(VERSION) \
-         -X $(LDFLAG_LOCATION).BuildDate=$(BUILD_DATE)"
-
+		-X $(LDFLAG_LOCATION).GitBranch=$(GIT_BRANCH) \
+		-X $(LDFLAG_LOCATION).GitSummary=$(GIT_SUMMARY) \
+		-X $(LDFLAG_LOCATION).AppVersion=$(VERSION) \
+		-X $(LDFLAG_LOCATION).BuildDate=$(BUILD_DATE)"
 
 ## Build linux bin
 build-linux:
 ifeq ($(GO_VERSION), 0)
-	$(error build requies go version 1.22.1 or higher)
+	$(error build requies go version 1.22 or higher)
 endif
-	GOOS=linux GOARCH=amd64 go build -o bioscfg \
-	   -ldflags \
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bioscfg \
+		-ldflags \
 		"-X $(LDFLAG_LOCATION).GitCommit=$(GIT_COMMIT) \
-         -X $(LDFLAG_LOCATION).GitBranch=$(GIT_BRANCH) \
-         -X $(LDFLAG_LOCATION).GitSummary=$(GIT_SUMMARY) \
-         -X $(LDFLAG_LOCATION).AppVersion=$(VERSION) \
-         -X $(LDFLAG_LOCATION).BuildDate=$(BUILD_DATE)"
-
+		-X $(LDFLAG_LOCATION).GitBranch=$(GIT_BRANCH) \
+		-X $(LDFLAG_LOCATION).GitSummary=$(GIT_SUMMARY) \
+		-X $(LDFLAG_LOCATION).AppVersion=$(VERSION) \
+		-X $(LDFLAG_LOCATION).BuildDate=$(BUILD_DATE)"
 
 ## build docker image and tag as ghcr.io/metal-toolbox/bioscfg:latest
 build-image: build-linux
 	@echo ">>>> NOTE: You may want to execute 'make build-image-nocache' depending on the Docker stages changed"
-	docker build --rm=true -f Dockerfile -t ${DOCKER_IMAGE}:latest  . \
-							 --label org.label-schema.schema-version=1.0 \
-							 --label org.label-schema.vcs-ref=$(GIT_COMMIT_FULL) \
-							 --label org.label-schema.vcs-url=$(REPO)
+	docker build --rm=true -f Dockerfile -t ${DOCKER_IMAGE}:latest . \
+		--label org.label-schema.schema-version=1.0 \
+		--label org.label-schema.vcs-ref=$(GIT_COMMIT_FULL) \
+		--label org.label-schema.vcs-url=$(REPO)
 
 ## tag and push devel docker image to local registry
 push-image-devel: build-image
@@ -73,13 +71,17 @@ push-image-devel: build-image
 push-image:
 	docker push ${DOCKER_IMAGE}:latest
 
+## Clean all caches
+clean-all:
+	golangci-lint cache clean
+	go clean -modcache -testcache -cache -fuzzcache
+
 # https://gist.github.com/prwhite/8168133
 # COLORS
 GREEN  := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 WHITE  := $(shell tput -Txterm setaf 7)
 RESET  := $(shell tput -Txterm sgr0)
-
 
 TARGET_MAX_CHAR_NUM=20
 ## Show help

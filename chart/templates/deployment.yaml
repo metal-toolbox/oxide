@@ -17,16 +17,16 @@ spec:
       terminationGracePeriodSeconds: 1200
       containers:
         - name: bioscfg
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ .Values.image.repository.url }}/bioscfg:{{ .Values.image.repository.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: [
            "bioscfg",
+           "run",
            "--config",
            "/etc/bioscfg/config.yaml",
            "--enable-pprof",
            "--log-level",
            "debug",
-           "--facility-code",
-           "{{ .Values.location }}"
           ]
           volumeMounts:
             - name: config-volume
@@ -35,32 +35,17 @@ spec:
               mountPath: /etc/nats
               readOnly: true
           env:
-            - name: BIOSCFG_NATS_URL
-              value: "{{ .Values.env.NATS_URL }}"
-            - name: BIOSCFG_NATS_CONNECT_TIMEOUT
-              value: "{{ .Values.env.NATS_CONNECT_TIMEOUT }}"
-            - name: BIOSCFG_NATS_KV_REPLICAS
-              value: "{{ .Values.env.NATS_KV_REPLICAS }}"
-            - name: BIOSCFG_NATS_CREDS_FILE
-              value: /etc/nats/nats.creds
-            - name: BIOSCFG_FLEETDB_ENDPOINT
-              value: "{{ .Values.env.FLEETDB_ENDPOINT }}"
-            - name: BIOSCFG_FLEETDB_DISABLE_OAUTH
-              value: "{{ .Values.env.FLEETDB_DISABLE_OAUTH }}"
-            - name: BIOSCFG_FLEETDB_FACILITY_CODE
-              value: "{{ .Values.location  }}"
-            - name: BIOSCFG_FLEETDB_OIDC_AUDIENCE_ENDPOINT
-              value: "{{ .Values.env.FLEETDB_OIDC_AUDIENCE_ENDPOINT }}"
-            - name: BIOSCFG_FLEETDB_OIDC_ISSUER_ENDPOINT
-              value: "{{ .Values.env.FLEETDB_OIDC_ISSUER_ENDPOINT }}"
-            - name: BIOSCFG_FLEETDB_OIDC_CLIENT_SCOPES
-              value: "{{ .Values.env.FLEETDB_OIDC_CLIENT_SCOPES }}"
+          {{- if .Values.env.endpoints.fleetdb.authenticate }}
+            - name: FLIPFLOP_ENDPOINTS_FLEETDB_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bioscfg-secrets
+                  key: fleetdb-oidc-client-secret
+          {{- end }}
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "{{ .Values.env.OTEL_EXPORTER_OTLP_ENDPOINT }}"
+              value: "{{ .Values.env.endpoints.otel.url }}"
             - name: OTEL_EXPORTER_OTLP_INSECURE
-              value: "{{ .Values.env.OTEL_EXPORTER_OTLP_INSECURE }}"
-            - name: BIOSCFG_FLEETDB_OIDC_CLIENT_ID
-              value: "{{ .Values.env.FLEETDB_OIDC_CLIENT_ID }}"
+              value: "{{ not .Values.env.endpoints.otel.authenticate }}"
           securityContext:
             capabilities:
               drop:

@@ -1,6 +1,10 @@
 apiVersion: v2
 name: bioscfg
-description: A helm chart for deploying the bioscfg controller.
-type: application
-version: 0.0.1
-appVersion: "0.0.1"
+description: A chart to control BMCs
+version: v0.1.1
+keywords:
+  - bmc
+  - bios
+home: "https://github.com/metal-toolbox/bioscfg"
+sources:
+  - "https://github.com/metal-toolbox/bioscfg"
