@@ -48,5 +48,5 @@ func Run(ctx context.Context, configFile, logLevel string, enableProfiling bool)
 
 	loggerEntry.Infof("Success! %s is starting to listen for conditions", model.Name)
 
-	return controller.Listen()
+	return controller.Listen(ctx)
 }

@@ -19,7 +19,6 @@ var (
 type BiosCfg struct {
 	cfg     *config.Configuration
 	logger  *logrus.Entry
-	ctx     context.Context
 	fleetdb *fleetdb.Store
 	nc      *ctrl.NatsController
 }
@@ -29,10 +28,9 @@ func New(ctx context.Context, cfg *config.Configuration, logger *logrus.Entry) (
 	bc := &BiosCfg{
 		cfg:    cfg,
 		logger: logger,
-		ctx:    ctx,
 	}
 
-	err := bc.initDependences()
+	err := bc.initDependences(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +39,7 @@ func New(ctx context.Context, cfg *config.Configuration, logger *logrus.Entry) (
 }
 
 // Listen listen to Nats for tasks
-func (bc *BiosCfg) Listen() error {
+func (bc *BiosCfg) Listen(ctx context.Context) error {
 	handleFactory := func() ctrl.TaskHandler {
 		return &TaskHandler{
 			cfg:          bc.cfg,
@@ -51,7 +49,7 @@ func (bc *BiosCfg) Listen() error {
 		}
 	}
 
-	err := bc.nc.ListenEvents(bc.ctx, handleFactory)
+	err := bc.nc.ListenEvents(ctx, handleFactory)
 	if err != nil {
 		return err
 	}
@@ -60,13 +58,13 @@ func (bc *BiosCfg) Listen() error {
 }
 
 // initDependences Initialize network dependencies
-func (bc *BiosCfg) initDependences() error {
-	err := bc.initNats()
+func (bc *BiosCfg) initDependences(ctx context.Context) error {
+	err := bc.initNats(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize connection to nats")
 	}
 
-	err = bc.initFleetDB()
+	err = bc.initFleetDB(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize connection to fleetdb")
 	}
@@ -74,7 +72,7 @@ func (bc *BiosCfg) initDependences() error {
 	return nil
 }
 
-func (bc *BiosCfg) initNats() error {
+func (bc *BiosCfg) initNats(ctx context.Context) error {
 	bc.nc = ctrl.NewNatsController(
 		string(rctypes.BiosControl),
 		bc.cfg.FacilityCode,
@@ -88,7 +86,7 @@ func (bc *BiosCfg) initNats() error {
 		ctrl.WithConnectionTimeout(bc.cfg.Endpoints.Nats.ConnectTimeout),
 	)
 
-	err := bc.nc.Connect(bc.ctx)
+	err := bc.nc.Connect(ctx)
 	if err != nil {
 		bc.logger.Error(err)
 		return err
@@ -97,9 +95,9 @@ func (bc *BiosCfg) initNats() error {
 	return nil
 }
 
-func (bc *BiosCfg) initFleetDB() error {
+func (bc *BiosCfg) initFleetDB(ctx context.Context) error {
 	store, err := fleetdb.New(
-		bc.ctx,
+		ctx,
 		&bc.cfg.Endpoints.FleetDB,
 		bc.logger.Logger,
 	)
