@@ -119,7 +119,7 @@ func (b *DryRunBMCClient) HostBooted(_ context.Context) (bool, error) {
 	return true, nil
 }
 
-func (b *DryRunBMCClient) ResetBios(ctx context.Context) error {
+func (b *DryRunBMCClient) ResetBiosConfig(ctx context.Context) error {
 	_, ok := serverStates[b.id]
 	if !ok {
 		return errBmcCantFindServer
@@ -128,6 +128,10 @@ func (b *DryRunBMCClient) ResetBios(ctx context.Context) error {
 	serverStates[b.id] = getDefaultSettings()
 
 	return b.SetPowerState(ctx, "cycle")
+}
+
+func (b *DryRunBMCClient) SetBiosConfigFromFile(_ context.Context, _ string) error {
+	return nil
 }
 
 // getServer gets a simulateed server state, and update power status and boot device if required
