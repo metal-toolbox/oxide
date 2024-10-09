@@ -9,19 +9,20 @@ import (
 	rctypes "github.com/metal-toolbox/rivets/condition"
 )
 
-func (th *TaskHandler) HandleAction(ctx context.Context) error {
+// handleAction completes the condition task based on the condition action
+func (th *TaskHandler) handleAction(ctx context.Context) error {
 	switch th.task.Parameters.Action {
 	case rctypes.ResetConfig:
-		return th.ResetBiosConfig(ctx)
+		return th.resetBiosConfig(ctx)
 	case rctypes.SetConfig:
-		return th.SetBiosConfig(ctx)
+		return th.setBiosConfig(ctx)
 	default:
 		return th.failedWithError(ctx, string(th.task.Parameters.Action), errUnsupportedAction)
 	}
 }
 
-// ResetBios reset the bios of the server
-func (th *TaskHandler) ResetBiosConfig(ctx context.Context) error {
+// resetBiosConfig resets the bios of the server
+func (th *TaskHandler) resetBiosConfig(ctx context.Context) error {
 	// Get Power State
 	state, err := th.bmcClient.GetPowerState(ctx)
 	if err != nil {
@@ -57,8 +58,8 @@ func (th *TaskHandler) ResetBiosConfig(ctx context.Context) error {
 	return th.successful(ctx, "skipping server reboot, not on")
 }
 
-// UploadConfig set BIOS Config
-func (th *TaskHandler) SetBiosConfig(ctx context.Context) error {
+// setBiosConfig sets BIOS Config
+func (th *TaskHandler) setBiosConfig(ctx context.Context) error {
 	var configURL = ""
 	if th.task.Parameters.BiosConfigURL != nil {
 		configURL = th.task.Parameters.BiosConfigURL.String()

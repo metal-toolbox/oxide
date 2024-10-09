@@ -38,7 +38,7 @@ func (th *TaskHandler) HandleTask(ctx context.Context, genTask *rctypes.Task[any
 	th.publisher = publisher
 
 	// Ungeneric the task
-	th.task, err = NewTask(genTask)
+	th.task, err = newTask(genTask)
 	if err != nil {
 		th.logger.WithFields(logrus.Fields{
 			"conditionID":  genTask.ID,
@@ -91,10 +91,10 @@ func (th *TaskHandler) HandleTask(ctx context.Context, genTask *rctypes.Task[any
 		}
 	}()
 
-	return th.Run(ctx)
+	return th.run(ctx)
 }
 
-func (th *TaskHandler) Run(ctx context.Context) error {
+func (th *TaskHandler) run(ctx context.Context) error {
 	ctx, span := otel.Tracer(pkgName).Start(
 		ctx,
 		"TaskHandler.Run",
@@ -108,5 +108,5 @@ func (th *TaskHandler) Run(ctx context.Context) error {
 		return err
 	}
 
-	return th.HandleAction(ctx)
+	return th.handleAction(ctx)
 }
