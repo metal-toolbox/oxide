@@ -11,7 +11,8 @@ import (
 
 type Task rctypes.Task[*rctypes.BiosControlTaskParameters, json.RawMessage]
 
-func NewTask(task *rctypes.Task[any, any]) (*Task, error) {
+// newTask converts a Generic Condition Task to a BiosControl Task
+func newTask(task *rctypes.Task[any, any]) (*Task, error) {
 	paramsJSON, ok := task.Parameters.(json.RawMessage)
 	if !ok {
 		return nil, errInvalidConditionParams
@@ -52,7 +53,8 @@ func NewTask(task *rctypes.Task[any, any]) (*Task, error) {
 	}, nil
 }
 
-func (task *Task) ToGeneric() (*rctypes.Task[any, any], error) {
+// toGeneric converts a BiosControl Task to a Generic Condition Task
+func (task *Task) toGeneric() (*rctypes.Task[any, any], error) {
 	paramsJSON, err := task.Parameters.Marshal()
 	if err != nil {
 		return nil, errors.Wrap(errTaskConv, err.Error()+": Task.Parameters")

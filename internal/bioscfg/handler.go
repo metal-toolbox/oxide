@@ -38,7 +38,7 @@ func (th *TaskHandler) HandleTask(ctx context.Context, genTask *rctypes.Task[any
 	th.publisher = publisher
 
 	// Ungeneric the task
-	th.task, err = NewTask(genTask)
+	th.task, err = newTask(genTask)
 	if err != nil {
 		th.logger.WithFields(logrus.Fields{
 			"conditionID":  genTask.ID,
@@ -91,10 +91,10 @@ func (th *TaskHandler) HandleTask(ctx context.Context, genTask *rctypes.Task[any
 		}
 	}()
 
-	return th.Run(ctx)
+	return th.run(ctx)
 }
 
-func (th *TaskHandler) Run(ctx context.Context) error {
+func (th *TaskHandler) run(ctx context.Context) error {
 	ctx, span := otel.Tracer(pkgName).Start(
 		ctx,
 		"TaskHandler.Run",
@@ -108,47 +108,5 @@ func (th *TaskHandler) Run(ctx context.Context) error {
 		return err
 	}
 
-	switch th.task.Parameters.Action {
-	case rctypes.ResetSettings:
-		return th.ResetBios(ctx)
-	default:
-		return th.failedWithError(ctx, string(th.task.Parameters.Action), errUnsupportedAction)
-	}
-}
-
-// ResetBios reset the bios of the server
-func (th *TaskHandler) ResetBios(ctx context.Context) error {
-	// Get Power State
-	state, err := th.bmcClient.GetPowerState(ctx)
-	if err != nil {
-		return th.failedWithError(ctx, "error getting power state", err)
-	}
-
-	err = th.publishActivef(ctx, "current power state: %s", state)
-	if err != nil {
-		return err
-	}
-
-	// Reset Bios
-	err = th.bmcClient.ResetBios(ctx)
-	if err != nil {
-		return th.failedWithError(ctx, "error reseting bios", err)
-	}
-
-	err = th.publishActive(ctx, "BIOS settings reset")
-	if err != nil {
-		return err
-	}
-
-	// Reboot (if ON)
-	if state == model.PowerStateOn {
-		err = th.bmcClient.SetPowerState(ctx, model.PowerStateReset)
-		if err != nil {
-			return th.failedWithError(ctx, "failed to reboot server", err)
-		}
-
-		return th.successful(ctx, "rebooting server")
-	}
-
-	return th.successful(ctx, "skipping server reboot, not on")
+	return th.handleAction(ctx)
 }

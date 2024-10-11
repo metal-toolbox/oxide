@@ -82,6 +82,7 @@ func (b *Client) Close(traceCtx context.Context) error {
 // GetPowerState returns the device power status
 func (b *Client) GetPowerState(ctx context.Context) (string, error) {
 	defer b.tracelog()
+
 	return b.client.GetPowerState(ctx)
 }
 
@@ -148,9 +149,14 @@ func (b *Client) HostBooted(ctx context.Context) (bool, error) {
 	return status == constants.POSTStateOS, nil
 }
 
-func (b *Client) ResetBios(ctx context.Context) error {
+func (b *Client) ResetBiosConfig(ctx context.Context) error {
 	defer b.tracelog()
 	return b.client.ResetBiosConfiguration(ctx)
+}
+
+func (b *Client) SetBiosConfigFromFile(ctx context.Context, cfg string) error {
+	defer b.tracelog()
+	return b.client.SetBiosConfigurationFromFile(ctx, cfg)
 }
 
 func (b *Client) tracelog() {
@@ -240,6 +246,9 @@ func newBmclibClient(asset *model.Asset, l *logrus.Entry) *bmclib.Client {
 		providers.FeatureBootDeviceSet,
 		providers.FeaturePowerSet,
 		providers.FeaturePowerState,
+		providers.FeatureResetBiosConfiguration,
+		providers.FeatureSetBiosConfiguration,
+		providers.FeatureSetBiosConfigurationFromFile,
 	)
 
 	// NOTE: remove the .Using("redfish") before this ends up in prod

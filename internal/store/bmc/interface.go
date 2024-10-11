@@ -14,5 +14,6 @@ type BMC interface {
 	GetBootDevice(ctx context.Context) (device string, persistent, efiBoot bool, err error)
 	PowerCycleBMC(ctx context.Context) error
 	HostBooted(ctx context.Context) (bool, error)
-	ResetBios(ctx context.Context) error
+	ResetBiosConfig(ctx context.Context) error
+	SetBiosConfigFromFile(ctx context.Context, cfg string) error
 }

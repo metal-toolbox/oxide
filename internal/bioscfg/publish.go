@@ -15,7 +15,7 @@ func (th *TaskHandler) publish(ctx context.Context, status string, state rctypes
 	th.task.State = state
 	th.task.Status.Append(status)
 
-	genTask, err := th.task.ToGeneric()
+	genTask, err := th.task.toGeneric()
 	if err != nil {
 		th.logger.WithError(errTaskConv).Error()
 		return err
