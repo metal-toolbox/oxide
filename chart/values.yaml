@@ -5,8 +5,6 @@ image:
     tag: latest
     url: localhost:5001
 env:
-  test: myTest
-  test1: myFirstTest
   facility: sandbox
   log_level: debug
   concurrency: 5

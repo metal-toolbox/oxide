@@ -69,6 +69,7 @@ func readInFile(v *viper.Viper, cfg *Configuration, path string) error {
 		if err != nil {
 			return errors.Wrap(ErrConfig, err.Error())
 		}
+		defer fh.Close()
 
 		if err = v.ReadConfig(fh); err != nil {
 			return errors.Wrap(ErrConfig, "ReadConfig error:"+err.Error())
