@@ -4,7 +4,6 @@ go 1.22.1
 
 require (
 	github.com/bmc-toolbox/bmclib/v2 v2.3.3
-	github.com/bombsimon/logrusr/v2 v2.0.1
 	github.com/bombsimon/logrusr/v4 v4.1.0
 	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/equinix-labs/otel-init-go v0.0.9
