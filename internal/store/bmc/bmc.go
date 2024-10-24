@@ -14,7 +14,7 @@ import (
 	"github.com/bmc-toolbox/bmclib/v2"
 	"github.com/bmc-toolbox/bmclib/v2/constants"
 	"github.com/bmc-toolbox/bmclib/v2/providers"
-	logrusrv2 "github.com/bombsimon/logrusr/v2"
+	logrusr "github.com/bombsimon/logrusr/v4"
 	"github.com/metal-toolbox/bioscfg/internal/model"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -228,7 +228,7 @@ func newBmclibClient(asset *model.Asset, l *logrus.Entry) *bmclib.Client {
 		logger.Level = 5
 	}
 
-	logruslogr := logrusrv2.New(logger)
+	logruslogr := logrusr.New(logger)
 
 	bmcClient := bmclib.NewClient(
 		asset.BmcAddress.String(),
