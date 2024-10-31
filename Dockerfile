@@ -1,4 +1,4 @@
-FROM debian:12.5-slim
+FROM debian:12.5-slim as stage1
 
 # Supermicro SUM
 # Note: If we remove the SUM tool, we can move back to an alpine image. Then also compile bioscfg with CGO_ENABLED=0
@@ -15,12 +15,7 @@ RUN tar -xvzf sum.tar.gz -C unzipped --strip-components=1
 
 ## Install
 RUN cp unzipped/sum /usr/sbin/sum #TODO; smc sum has the same name as the gnu command sum (/usr/bin/sum). So we are overwritting it. Sorry not Sorry.
-RUN chmod +x /usr/bin/sum
-
-## Clean-up
-WORKDIR /tmp
-RUN rm -rf /tmp/sum
-RUN apt-get purge wget -y
+RUN chmod +x /usr/sbin/sum
 
 # IPMI Tool
 #
@@ -58,17 +53,14 @@ RUN ./configure \
 RUN make
 RUN make install
 
+# Build a lean image with dependencies installed.
+FROM debian:12.5-slim
+COPY --from=stage1 /usr/sbin/sum /usr/bin/sum
+COPY --from=stage1 /usr/local/bin/ipmitool /usr/local/bin/ipmitool
+
 ## Install runtime dependencies
+RUN apt-get update -y
 RUN apt-get install libreadline8 --no-install-recommends -y
-
-## Clean-up
-WORKDIR /tmp
-RUN rm -rf /tmp/ipmi
-RUN apt-get purge ${IPMITOOL_BUILD_DEPENDENCIES} -y
-
-# Clean apt
-RUN apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y
-RUN rm -rf /var/lib/apt/lists/\* /tmp/\* /var/tmp/*
 
 # BiosCfg
 
