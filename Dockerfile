@@ -1,4 +1,4 @@
-FROM debian:12.5-slim as stage1
+FROM debian:12.5-slim AS stage1
 
 # Supermicro SUM
 # Note: If we remove the SUM tool, we can move back to an alpine image. Then also compile bioscfg with CGO_ENABLED=0
