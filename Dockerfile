@@ -53,10 +53,15 @@ RUN ./configure \
 RUN make
 RUN make install
 
+## Get IPMI IANA resource, to prevent dependency on third party servers at runtime.
+WORKDIR /usr/share/misc
+RUN wget https://www.iana.org/assignments/enterprise-numbers.txt
+
 # Build a lean image with dependencies installed.
 FROM debian:12.5-slim
 COPY --from=stage1 /usr/sbin/sum /usr/bin/sum
 COPY --from=stage1 /usr/local/bin/ipmitool /usr/local/bin/ipmitool
+COPY --from=stage1 /usr/share/misc/enterprise-numbers.txt /usr/share/misc/enterprise-numbers.txt
 
 ## Install runtime dependencies
 RUN apt-get update -y
