@@ -45,7 +45,7 @@ build-linux:
 ifeq ($(GO_VERSION), 0)
 	$(error build requies go version 1.22 or higher)
 endif
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bioscfg \
+	CGO_ENABLED=0 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bioscfg \
 		-ldflags \
 		"-X $(LDFLAG_LOCATION).GitCommit=$(GIT_COMMIT) \
 		-X $(LDFLAG_LOCATION).GitBranch=$(GIT_BRANCH) \
