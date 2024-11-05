@@ -1,4 +1,4 @@
-FROM debian:12.5-slim AS stage1
+FROM debian:12.7-slim AS stage1
 
 # Supermicro SUM
 # Note: If we remove the SUM tool, we can move back to an alpine image. Then also compile bioscfg with CGO_ENABLED=0
@@ -58,7 +58,7 @@ WORKDIR /usr/share/misc
 RUN wget https://www.iana.org/assignments/enterprise-numbers.txt
 
 # Build a lean image with dependencies installed.
-FROM debian:12.5-slim
+FROM debian:12.7-slim
 COPY --from=stage1 /usr/sbin/sum /usr/bin/sum
 COPY --from=stage1 /usr/local/bin/ipmitool /usr/local/bin/ipmitool
 COPY --from=stage1 /usr/share/misc/enterprise-numbers.txt /usr/share/misc/enterprise-numbers.txt
