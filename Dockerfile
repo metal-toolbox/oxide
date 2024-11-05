@@ -1,4 +1,4 @@
-FROM debian:12.5-slim AS stage1
+FROM debian:12.7-slim AS stage1
 
 # Supermicro SUM
 # Note: If we remove the SUM tool, we can move back to an alpine image. Then also compile bioscfg with CGO_ENABLED=0
@@ -14,8 +14,8 @@ RUN mkdir -p unzipped
 RUN tar -xvzf sum.tar.gz -C unzipped --strip-components=1
 
 ## Install
-RUN cp unzipped/sum /usr/sbin/sum #TODO; smc sum has the same name as the gnu command sum (/usr/bin/sum). So we are overwritting it. Sorry not Sorry.
-RUN chmod +x /usr/sbin/sum
+RUN cp unzipped/sum /usr/bin/sum #TODO; smc sum has the same name as the gnu command sum (/usr/bin/sum). So we are overwritting it. Sorry not Sorry.
+RUN chmod +x /usr/bin/sum
 
 # IPMI Tool
 #
@@ -58,8 +58,8 @@ WORKDIR /usr/share/misc
 RUN wget https://www.iana.org/assignments/enterprise-numbers.txt
 
 # Build a lean image with dependencies installed.
-FROM debian:12.5-slim
-COPY --from=stage1 /usr/sbin/sum /usr/bin/sum
+FROM debian:12.7-slim
+COPY --from=stage1 /usr/bin/sum /usr/bin/sum
 COPY --from=stage1 /usr/local/bin/ipmitool /usr/local/bin/ipmitool
 COPY --from=stage1 /usr/share/misc/enterprise-numbers.txt /usr/share/misc/enterprise-numbers.txt
 
@@ -71,5 +71,6 @@ RUN apt-get install libreadline8 --no-install-recommends -y
 
 COPY bioscfg /usr/sbin/bioscfg
 RUN chmod +x /usr/sbin/bioscfg
+
 
 ENTRYPOINT ["/usr/sbin/bioscfg"]
