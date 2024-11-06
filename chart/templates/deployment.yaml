@@ -50,16 +50,13 @@ spec:
             capabilities:
               drop:
                 - NET_RAW
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            runAsUser: 1000
           resources:
             limits:
               cpu: 200m
-              memory: 200M
+              memory: 500M
             requests:
               cpu: 200m
-              memory: 200M
+              memory: 500M
           ports:
             - name: metrics-port
               containerPort: 9090
