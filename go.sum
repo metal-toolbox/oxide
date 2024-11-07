@@ -556,8 +556,12 @@ github.com/mattn/go-sqlite3 v1.14.22/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxU
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
 github.com/metal-toolbox/conditionorc v1.1.8 h1:5wjIdPLdLY2RkIeGZ73tTFEnKJxBzBM5ZJMopDqFgSg=
 github.com/metal-toolbox/conditionorc v1.1.8/go.mod h1:eXlXZoOJBmihR4/+xA2o1dj1sQTXkU63Ekma7Ouc+o0=
+github.com/metal-toolbox/conditionorc v1.1.9 h1:8VX8QWjHd+ZGacylwp5Q3PB8+Dt/9dBeA64e00BF93Y=
+github.com/metal-toolbox/conditionorc v1.1.9/go.mod h1:eXlXZoOJBmihR4/+xA2o1dj1sQTXkU63Ekma7Ouc+o0=
 github.com/metal-toolbox/ctrl v0.2.9 h1:Q1Hqpqyb71/gg2PcX/qrfoDE8FlydJt4rPQb7/Z8LhI=
 github.com/metal-toolbox/ctrl v0.2.9/go.mod h1:QVATUIWFx3dbjOoEX0EnJHtRvypRlXZ9HUGaPLRyTG8=
+github.com/metal-toolbox/ctrl v0.3.0 h1:h/d0LQN4o/4GO567Vx9i9q+VM+yT74ejjXm8DoeLvTY=
+github.com/metal-toolbox/ctrl v0.3.0/go.mod h1:J0PoZJ5B231+f3Ys4C23w5A1NBISB4y6e+45UiS7fLY=
 github.com/metal-toolbox/fleetdb v1.19.7 h1:lTl67gtt5DzTdH4MgLViyXaTaH6FM8BtmM7NX7hXDZY=
 github.com/metal-toolbox/fleetdb v1.19.7/go.mod h1:IMbJwyC9DnznuPNjAaP54Y6uWuWu9cPXGH+yoe7jwGA=
 github.com/metal-toolbox/rivets v1.3.10 h1:UgYQSx/QJF6Yuzf+YSRF/t9soL6QjMY8sLugf/aMmII=
@@ -600,6 +604,8 @@ github.com/nats-io/nats-server/v2 v2.10.12 h1:G6u+RDrHkw4bkwn7I911O5jqys7jJVRY6M
 github.com/nats-io/nats-server/v2 v2.10.12/go.mod h1:H1n6zXtYLFCgXcf/SF8QNTSIFuS8tyZQMN9NguUHdEs=
 github.com/nats-io/nats.go v1.36.0 h1:suEUPuWzTSse/XhESwqLxXGuj8vGRuPRoG7MoRN/qyU=
 github.com/nats-io/nats.go v1.36.0/go.mod h1:Ubdu4Nh9exXdSz0RVWRFBbRfrbSxOYd26oF0wkWclB8=
+github.com/nats-io/nats.go v1.37.0 h1:07rauXbVnnJvv1gfIyghFEo6lUcYRY0WXc3x7x0vUxE=
+github.com/nats-io/nats.go v1.37.0/go.mod h1:Ubdu4Nh9exXdSz0RVWRFBbRfrbSxOYd26oF0wkWclB8=
 github.com/nats-io/nkeys v0.4.7 h1:RwNJbbIdYCoClSDNY7QVKZlyb/wfT6ugvFCiKy6vDvI=
 github.com/nats-io/nkeys v0.4.7/go.mod h1:kqXRgRDPlGy7nGaEDMuYzmiJCIAAWDK0IMBtDmGD0nc=
 github.com/nats-io/nuid v1.0.1 h1:5iA8DT8V7q8WK2EScv2padNa/rTESc1KdnPw4TC2paw=
