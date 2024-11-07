@@ -2,6 +2,7 @@ package bioscfg
 
 import (
 	"context"
+	"time"
 
 	"github.com/metal-toolbox/bioscfg/internal/config"
 	"github.com/metal-toolbox/bioscfg/internal/store/fleetdb"
@@ -13,6 +14,7 @@ import (
 
 var (
 	pkgName = "internal/bioscfg"
+	retries = 5
 )
 
 // BiosCfg BiosCfg Controller Struct
@@ -73,26 +75,33 @@ func (bc *BiosCfg) initDependences(ctx context.Context) error {
 }
 
 func (bc *BiosCfg) initNats(ctx context.Context) error {
-	bc.nc = ctrl.NewNatsController(
-		string(rctypes.BiosControl),
-		bc.cfg.FacilityCode,
-		string(rctypes.BiosControl),
-		bc.cfg.Endpoints.Nats.URL,
-		bc.cfg.Endpoints.Nats.CredsFile,
-		rctypes.BiosControl,
-		ctrl.WithConcurrency(bc.cfg.Concurrency),
-		ctrl.WithKVReplicas(bc.cfg.Endpoints.Nats.KVReplicationFactor),
-		ctrl.WithLogger(bc.logger.Logger),
-		ctrl.WithConnectionTimeout(bc.cfg.Endpoints.Nats.ConnectTimeout),
-	)
+	var err error
 
-	err := bc.nc.Connect(ctx)
-	if err != nil {
+	for i := range retries {
+		bc.nc = ctrl.NewNatsController(
+			string(rctypes.BiosControl),
+			bc.cfg.FacilityCode,
+			string(rctypes.BiosControl),
+			bc.cfg.Endpoints.Nats.URL,
+			bc.cfg.Endpoints.Nats.CredsFile,
+			rctypes.BiosControl,
+			ctrl.WithConcurrency(bc.cfg.Concurrency),
+			ctrl.WithKVReplicas(bc.cfg.Endpoints.Nats.KVReplicationFactor),
+			ctrl.WithLogger(bc.logger.Logger),
+			ctrl.WithConnectionTimeout(bc.cfg.Endpoints.Nats.ConnectTimeout),
+		)
+
+		err = bc.nc.Connect(ctx)
+		if err == nil {
+			return nil
+		}
+
 		bc.logger.Error(err)
-		return err
+		bc.logger.Warnf("Attempt %d of %d failed. Trying again . . .", i, retries)
+		time.Sleep(time.Duration(i) * time.Second)
 	}
 
-	return nil
+	return err
 }
 
 func (bc *BiosCfg) initFleetDB(ctx context.Context) error {
