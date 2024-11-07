@@ -97,8 +97,8 @@ func (bc *BiosCfg) initNats(ctx context.Context) error {
 		}
 
 		bc.logger.Error(err)
-		bc.logger.Infof("Attempt %d of %d failed. Trying again . . .", i, retries)
-		time.Sleep(time.Second)
+		bc.logger.Warnf("Attempt %d of %d failed. Trying again . . .", i, retries)
+		time.Sleep(time.Duration(i) * time.Second)
 	}
 
 	return err
