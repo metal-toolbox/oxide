@@ -1,4 +1,4 @@
-FROM alpine:3.8 AS stage1
+FROM alpine:3.8 as stage1
 
 # IPMITOOL
 
