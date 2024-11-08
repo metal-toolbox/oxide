@@ -2,7 +2,21 @@ apiVersion: v1
 entries:
   bioscfg:
   - apiVersion: v2
-    created: "2024-11-07T15:54:11.173966115Z"
+    created: "2024-11-08T16:31:04.635154615Z"
+    description: A chart to control BMCs
+    digest: 54d18406bda7f7ae2df9b97fd7c504f27dfc10c6abfce63f6aea12dd9f4cfa6f
+    home: https://github.com/metal-toolbox/bioscfg
+    keywords:
+    - bmc
+    - bios
+    name: bioscfg
+    sources:
+    - https://github.com/metal-toolbox/bioscfg
+    urls:
+    - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.5.tgz
+    version: v0.1.5
+  - apiVersion: v2
+    created: "2024-11-08T16:31:04.634940185Z"
     description: A chart to control BMCs
     digest: 9a46a916179278a1a7e76fa54079243896b32ad0cb6d4c3e716409fea9faeba7
     home: https://github.com/metal-toolbox/bioscfg
@@ -16,7 +30,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.4.tgz
     version: v0.1.4
   - apiVersion: v2
-    created: "2024-11-07T15:54:11.173745004Z"
+    created: "2024-11-08T16:31:04.634746553Z"
     description: A chart to control BMCs
     digest: 06a56164d646e390e08d3c2d38fc25935f3e8238f2692375f2282b0d4db75e48
     home: https://github.com/metal-toolbox/bioscfg
@@ -30,7 +44,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.3.tgz
     version: v0.1.3
   - apiVersion: v2
-    created: "2024-11-07T15:54:11.173536546Z"
+    created: "2024-11-08T16:31:04.63453103Z"
     description: A chart to control BMCs
     digest: d4c9e8f6f69779c9476f68274a258c480e2b8b29cd579db5fffaf7297d850bc5
     home: https://github.com/metal-toolbox/bioscfg
@@ -44,7 +58,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.2.tgz
     version: v0.1.2
   - apiVersion: v2
-    created: "2024-11-07T15:54:11.173316005Z"
+    created: "2024-11-08T16:31:04.634285662Z"
     description: A chart to control BMCs
     digest: 0df10d1d691a88bd7bca765f6dfa1b91c1b41d44704be0e3a75d469bd05ce6e0
     home: https://github.com/metal-toolbox/bioscfg
@@ -58,7 +72,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.1.tgz
     version: v0.1.1
   - apiVersion: v2
-    created: "2024-11-07T15:54:11.173098891Z"
+    created: "2024-11-08T16:31:04.633782472Z"
     description: A chart to control BMCs
     digest: cff8e1f4dc3e09a597a0b6ab70ef87905a8ded8d33d3fce2f2d8eb3f6b496d0f
     home: https://github.com/metal-toolbox/bioscfg
@@ -72,7 +86,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.0.tgz
     version: v0.1.0
   - apiVersion: v2
-    created: "2024-11-07T15:54:11.17285085Z"
+    created: "2024-11-08T16:31:04.632996334Z"
     description: A chart to control BMCs
     digest: 03e6c81f8cee64c0c89bbbd47d1b6224a61bf16f8825ff800e392b41806ede09
     home: https://github.com/metal-toolbox/bioscfg
@@ -85,4 +99,4 @@ entries:
     urls:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.0.2.tgz
     version: v0.0.2
-generated: "2024-11-07T15:54:11.172462938Z"
+generated: "2024-11-08T16:31:04.632639317Z"
