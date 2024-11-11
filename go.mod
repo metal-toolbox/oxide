@@ -25,7 +25,7 @@ require (
 	go.opentelemetry.io/otel v1.31.0
 	go.opentelemetry.io/otel/trace v1.31.0
 	golang.org/x/net v0.30.0
-	golang.org/x/oauth2 v0.22.0
+	golang.org/x/oauth2 v0.24.0
 )
 
 require (
