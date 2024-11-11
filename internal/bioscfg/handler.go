@@ -82,12 +82,14 @@ func (th *TaskHandler) HandleTask(ctx context.Context, genTask *rctypes.Task[any
 
 	err = th.bmcClient.Open(ctx)
 	if err != nil {
-		th.logger.WithError(err).Error("bmc connection failed to connect")
-		return err
+		return th.failedWithError(ctx, "bmc connection failed to connect", err)
 	}
 	defer func() {
 		if err := th.bmcClient.Close(ctx); err != nil {
-			th.logger.WithError(err).Error("bmc connection close error")
+			err := th.failedWithError(ctx, "bmc connection close error", err)
+			if err != nil {
+				th.logger.WithError(err).Error("bmc connection close error, and then failed to set condition status to failed")
+			}
 		}
 	}()
 
