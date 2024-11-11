@@ -3,7 +3,7 @@ module github.com/metal-toolbox/bioscfg
 go 1.23.1
 
 require (
-	github.com/bmc-toolbox/bmclib/v2 v2.3.4
+	github.com/bmc-toolbox/bmclib/v2 v2.3.5-0.20241111155613-31918a066b74
 	github.com/bombsimon/logrusr/v4 v4.1.0
 	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/equinix-labs/otel-init-go v0.0.9

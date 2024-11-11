@@ -242,16 +242,10 @@ func newBmclibClient(asset *model.Asset, l *logrus.Entry) *bmclib.Client {
 	)
 
 	bmcClient.Registry.Drivers = bmcClient.Registry.Supports(
-		providers.FeatureBmcReset,
-		providers.FeatureBootDeviceSet,
-		providers.FeaturePowerSet,
-		providers.FeaturePowerState,
 		providers.FeatureResetBiosConfiguration,
 		providers.FeatureSetBiosConfiguration,
 		providers.FeatureSetBiosConfigurationFromFile,
 	)
 
-	// NOTE: remove the .Using("redfish") before this ends up in prod
-	// this is kept here since ipmitool doesn't work well in the docker sandbox env.
-	return bmcClient.Using("redfish")
+	return bmcClient
 }
