@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/metal-toolbox/bioscfg/internal/metrics"
-	rctypes "github.com/metal-toolbox/rivets/condition"
+	rctypes "github.com/metal-toolbox/rivets/v2/condition"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/metal-toolbox/bioscfg/internal/metrics"
 )
 
 func (th *TaskHandler) publish(ctx context.Context, status string, state rctypes.State) error {

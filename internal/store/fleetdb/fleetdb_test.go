@@ -8,7 +8,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/metal-toolbox/bioscfg/internal/model"
 	fleetdbapi "github.com/metal-toolbox/fleetdb/pkg/api/v1"
-	"github.com/metal-toolbox/rivets/fleetdb"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,14 +43,14 @@ func TestValidateRequiredAttributes(t *testing.T) {
 		},
 		{
 			"BMC password field empty",
-			&fleetdbapi.Server{Attributes: []fleetdbapi.Attributes{{Namespace: fleetdb.ServerAttributeNSBmcAddress}}},
+			&fleetdbapi.Server{Attributes: []fleetdbapi.Attributes{{Namespace: fleetdbBMCInfoNS}}},
 			&fleetdbapi.ServerCredential{Username: "foo", Password: ""},
 			true,
 			"BMC password field empty",
 		},
 		{
 			"BMC username field empty",
-			&fleetdbapi.Server{Attributes: []fleetdbapi.Attributes{{Namespace: fleetdb.ServerAttributeNSBmcAddress}}},
+			&fleetdbapi.Server{Attributes: []fleetdbapi.Attributes{{Namespace: fleetdbBMCInfoNS}}},
 			&fleetdbapi.ServerCredential{Username: "", Password: "123"},
 			true,
 			"BMC username field empty",
@@ -97,8 +96,8 @@ func TestToAsset(t *testing.T) {
 			&fleetdbapi.Server{
 				Attributes: []fleetdbapi.Attributes{
 					{
-						Namespace: fleetdb.ServerAttributeNSBmcAddress,
-						Data:      []byte(`{"namespace":"foo"}`),
+						Namespace: fleetdbBMCInfoNS,
+						Data:      []byte(`{"data":"foo"}`),
 					},
 				},
 			},
@@ -111,7 +110,7 @@ func TestToAsset(t *testing.T) {
 			&fleetdbapi.Server{
 				Attributes: []fleetdbapi.Attributes{
 					{
-						Namespace: fleetdb.ServerAttributeNSBmcAddress,
+						Namespace: fleetdbBMCInfoNS,
 						Data:      []byte(`{"address":"127.0.0.1"}`),
 					},
 				},

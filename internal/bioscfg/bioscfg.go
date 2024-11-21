@@ -3,12 +3,13 @@ package bioscfg
 import (
 	"context"
 
-	"github.com/metal-toolbox/bioscfg/internal/config"
-	"github.com/metal-toolbox/bioscfg/internal/store/fleetdb"
 	"github.com/metal-toolbox/ctrl"
-	rctypes "github.com/metal-toolbox/rivets/condition"
+	rctypes "github.com/metal-toolbox/rivets/v2/condition"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/metal-toolbox/bioscfg/internal/config"
+	"github.com/metal-toolbox/bioscfg/internal/store/fleetdb"
 )
 
 var (

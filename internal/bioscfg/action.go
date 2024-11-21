@@ -5,8 +5,9 @@ import (
 	"io"
 	"net/http"
 
+	rctypes "github.com/metal-toolbox/rivets/v2/condition"
+
 	"github.com/metal-toolbox/bioscfg/internal/model"
-	rctypes "github.com/metal-toolbox/rivets/condition"
 )
 
 // handleAction completes the condition task based on the condition action
