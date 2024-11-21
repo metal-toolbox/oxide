@@ -11,15 +11,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bmc-toolbox/bmclib/v2"
-	"github.com/bmc-toolbox/bmclib/v2/constants"
-	"github.com/bmc-toolbox/bmclib/v2/providers"
 	logrusr "github.com/bombsimon/logrusr/v4"
-	"github.com/metal-toolbox/bioscfg/internal/model"
+	"github.com/metal-toolbox/bmclib"
+	"github.com/metal-toolbox/bmclib/constants"
+	"github.com/metal-toolbox/bmclib/providers"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 	"golang.org/x/net/publicsuffix"
+
+	"github.com/metal-toolbox/bioscfg/internal/model"
 )
 
 const (

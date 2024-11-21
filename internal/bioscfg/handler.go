@@ -4,15 +4,16 @@ import (
 	"context"
 	"time"
 
+	"github.com/metal-toolbox/ctrl"
+	rctypes "github.com/metal-toolbox/rivets/v2/condition"
+	"github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/metal-toolbox/bioscfg/internal/config"
 	"github.com/metal-toolbox/bioscfg/internal/model"
 	"github.com/metal-toolbox/bioscfg/internal/store/bmc"
 	"github.com/metal-toolbox/bioscfg/internal/store/fleetdb"
-	"github.com/metal-toolbox/ctrl"
-	rctypes "github.com/metal-toolbox/rivets/condition"
-	"github.com/sirupsen/logrus"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/trace"
 )
 
 type TaskHandler struct {

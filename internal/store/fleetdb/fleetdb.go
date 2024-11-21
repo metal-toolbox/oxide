@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/metal-toolbox/bioscfg/internal/model"
-	"github.com/metal-toolbox/rivets/fleetdb"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
@@ -133,7 +132,7 @@ func serverAttributes(attributes []fleetdbapi.Attributes) (map[string]string, er
 
 	for _, attribute := range attributes {
 		// bmc address attribute
-		if attribute.Namespace == fleetdb.ServerAttributeNSBmcAddress {
+		if attribute.Namespace == fleetdbBMCInfoNS {
 			if err := json.Unmarshal(attribute.Data, &bmcData); err != nil {
 				return nil, errors.Wrap(ErrFleetDBObject, "bmc address attribute: "+err.Error())
 			}

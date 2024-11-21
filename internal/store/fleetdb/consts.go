@@ -6,6 +6,8 @@ const (
 	// fleetdb BMC address attribute key
 	bmcIPAddressAttributeKey = "address"
 
+	fleetdbBMCInfoNS = "sh.hollow.bmc_info"
+
 	// fleetdb namespace prefix the data is stored in.
 	fleetdbNSPrefix = "sh.hollow.bioscfg"
 
