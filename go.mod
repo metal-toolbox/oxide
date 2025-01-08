@@ -4,13 +4,15 @@ go 1.23.1
 
 require (
 	github.com/bombsimon/logrusr/v4 v4.1.0
-	github.com/coreos/go-oidc/v3 v3.11.0
+	github.com/coreos/go-oidc/v3 v3.12.0
 	github.com/equinix-labs/otel-init-go v0.0.9
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-retryablehttp v0.7.7
 	github.com/jeremywohl/flatten v1.0.1
+	github.com/metal-toolbox/bmclib v1.0.2
 	github.com/metal-toolbox/ctrl v1.1.0
 	github.com/metal-toolbox/fleetdb v1.20.1
+	github.com/metal-toolbox/rivets/v2 v2.0.0
 	github.com/mitchellh/copystructure v1.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pkg/errors v0.9.1
@@ -90,9 +92,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/metal-toolbox/bmc-common v1.0.2 // indirect
-	github.com/metal-toolbox/bmclib v1.0.2 // indirect
 	github.com/metal-toolbox/conditionorc v1.12.0 // indirect
-	github.com/metal-toolbox/rivets/v2 v2.0.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
