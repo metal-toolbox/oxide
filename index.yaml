@@ -2,7 +2,21 @@ apiVersion: v1
 entries:
   bioscfg:
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.301141761Z"
+    created: "2025-02-12T18:12:08.566237105Z"
+    description: A chart to control BMCs
+    digest: 0d5aa5091a4b4b543f7504eee7a9ccc7dcadcbbf4c852f517ffa6b7e6694c3dd
+    home: https://github.com/metal-toolbox/bioscfg
+    keywords:
+    - bmc
+    - bios
+    name: bioscfg
+    sources:
+    - https://github.com/metal-toolbox/bioscfg
+    urls:
+    - https://metal-toolbox.github.io/bioscfg/bioscfg-v1.0.1.tgz
+    version: v1.0.1
+  - apiVersion: v2
+    created: "2025-02-12T18:12:08.565986208Z"
     description: A chart to control BMCs
     digest: c90f748da027feeffaa93d43e0be019301dfdaa7c77ccfc0d99ce09cf6cfa29a
     home: https://github.com/metal-toolbox/bioscfg
@@ -16,7 +30,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v1.0.0.tgz
     version: v1.0.0
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.300945712Z"
+    created: "2025-02-12T18:12:08.565505651Z"
     description: A chart to control BMCs
     digest: cfc953f88f011ef2301e9cd7c24db68cfbb80350be819c07d1a13d4f5f9eab7c
     home: https://github.com/metal-toolbox/bioscfg
@@ -30,7 +44,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.6.tgz
     version: v0.1.6
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.300759052Z"
+    created: "2025-02-12T18:12:08.565007512Z"
     description: A chart to control BMCs
     digest: 54d18406bda7f7ae2df9b97fd7c504f27dfc10c6abfce63f6aea12dd9f4cfa6f
     home: https://github.com/metal-toolbox/bioscfg
@@ -44,7 +58,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.5.tgz
     version: v0.1.5
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.30054045Z"
+    created: "2025-02-12T18:12:08.564622996Z"
     description: A chart to control BMCs
     digest: 9a46a916179278a1a7e76fa54079243896b32ad0cb6d4c3e716409fea9faeba7
     home: https://github.com/metal-toolbox/bioscfg
@@ -58,7 +72,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.4.tgz
     version: v0.1.4
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.300335766Z"
+    created: "2025-02-12T18:12:08.56443189Z"
     description: A chart to control BMCs
     digest: 06a56164d646e390e08d3c2d38fc25935f3e8238f2692375f2282b0d4db75e48
     home: https://github.com/metal-toolbox/bioscfg
@@ -72,7 +86,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.3.tgz
     version: v0.1.3
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.300132834Z"
+    created: "2025-02-12T18:12:08.564214114Z"
     description: A chart to control BMCs
     digest: d4c9e8f6f69779c9476f68274a258c480e2b8b29cd579db5fffaf7297d850bc5
     home: https://github.com/metal-toolbox/bioscfg
@@ -86,7 +100,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.2.tgz
     version: v0.1.2
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.299934211Z"
+    created: "2025-02-12T18:12:08.56401907Z"
     description: A chart to control BMCs
     digest: 0df10d1d691a88bd7bca765f6dfa1b91c1b41d44704be0e3a75d469bd05ce6e0
     home: https://github.com/metal-toolbox/bioscfg
@@ -100,7 +114,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.1.tgz
     version: v0.1.1
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.299714197Z"
+    created: "2025-02-12T18:12:08.563649372Z"
     description: A chart to control BMCs
     digest: cff8e1f4dc3e09a597a0b6ab70ef87905a8ded8d33d3fce2f2d8eb3f6b496d0f
     home: https://github.com/metal-toolbox/bioscfg
@@ -114,7 +128,7 @@ entries:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.1.0.tgz
     version: v0.1.0
   - apiVersion: v2
-    created: "2024-11-21T19:27:35.299491849Z"
+    created: "2025-02-12T18:12:08.563443878Z"
     description: A chart to control BMCs
     digest: 03e6c81f8cee64c0c89bbbd47d1b6224a61bf16f8825ff800e392b41806ede09
     home: https://github.com/metal-toolbox/bioscfg
@@ -127,4 +141,4 @@ entries:
     urls:
     - https://metal-toolbox.github.io/bioscfg/bioscfg-v0.0.2.tgz
     version: v0.0.2
-generated: "2024-11-21T19:27:35.299145699Z"
+generated: "2025-02-12T18:12:08.563064632Z"
