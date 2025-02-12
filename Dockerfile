@@ -1,4 +1,4 @@
-FROM alpine:3.8 AS stage1
+FROM alpine:3.21 AS stage1
 
 # IPMITOOL
 
@@ -59,7 +59,7 @@ RUN rm -rf /tmp/sum
 
 # Build a lean image with dependencies installed.
 ## Do this because apk can install a ton of junk.
-FROM alpine:3.8
+FROM alpine:3.21
 COPY --from=stage1 / /
 
 ## SUM and IPMITOOL is dynamically linked and needs glibc
