@@ -9,8 +9,10 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-retryablehttp v0.7.7
 	github.com/jeremywohl/flatten v1.0.1
+	github.com/metal-toolbox/bmclib v1.1.2
 	github.com/metal-toolbox/ctrl v1.1.0
 	github.com/metal-toolbox/fleetdb v1.20.1
+	github.com/metal-toolbox/rivets/v2 v2.0.0
 	github.com/mitchellh/copystructure v1.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pkg/errors v0.9.1
@@ -33,7 +35,6 @@ require (
 	github.com/VictorLowther/soap v0.0.0-20150314151524-8e36fca84b22 // indirect
 	github.com/banzaicloud/logrus-runtime-formatter v0.0.0-20190729070250-5ae5475bae5e // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/bmc-toolbox/common v0.0.0-20241031162543-6b96e5981a0d // indirect
 	github.com/bytedance/sonic v1.12.4 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -89,10 +90,8 @@ require (
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/metal-toolbox/bmc-common v1.0.2 // indirect
-	github.com/metal-toolbox/bmclib v1.0.2 // indirect
+	github.com/metal-toolbox/bmc-common v1.0.3 // indirect
 	github.com/metal-toolbox/conditionorc v1.12.0 // indirect
-	github.com/metal-toolbox/rivets/v2 v2.0.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
