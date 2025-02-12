@@ -1,7 +1,7 @@
 apiVersion: v2
 name: bioscfg
 description: A chart to control BMCs
-version: v0.1.1
+version: v0.1.2
 keywords:
   - bmc
   - bios

@@ -67,7 +67,7 @@ func (th *TaskHandler) setBiosConfig(ctx context.Context) error {
 	}
 
 	if configURL == "" {
-		return th.failed(ctx, "no Bios Configu URL was found")
+		return th.failed(ctx, "no Bios Config URL was found")
 	}
 
 	req, err := http.NewRequest(http.MethodGet, configURL, http.NoBody)
